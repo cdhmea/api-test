@@ -1,0 +1,11 @@
+doctype html
+html
+  head
+    title Список пользователей
+    link(rel="stylesheet", href="/public/style.css")
+  body
+    h1 Список пользователей
+    a(href="/users/create") Добавить нового
+    ul
+      each user in users
+        li #{user.name} (#{user.email}) - ID: #{user.id}

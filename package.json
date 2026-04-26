@@ -10,8 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fastify/formbody": "^8.0.2",
     "@fastify/static": "^9.0.0",
+    "@fastify/view": "^11.1.1",
     "fastify": "^5.8.4",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "pug": "^3.0.4"
   }
 }
