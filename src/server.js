@@ -16,10 +16,7 @@ const db = new Database('database.db')
 db.exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT)")
 
 app.register(fastifyFormbody)
-app.register(fastifyStatic, {
-  root: path.join(__dirname, 'public'),
-  prefix: '/public/'
-})
+
 app.register(fastifyView, {
   engine: { pug },
   root: path.join(__dirname, 'views')
