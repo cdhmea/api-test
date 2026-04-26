@@ -5,29 +5,23 @@ import fastifyFormbody from "@fastify/formbody"
 import pug from "pug"
 import path from "path"
 import { fileURLToPath } from "url"
+import Database from "better-sqlite3"
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const app = fastify()
 const port = 3000
+const db = new Database('database.db')
 
-let users = [
-  { id: 1, name: "Иван Иванов", email: "ivan@example.com" },
-  { id: 2, name: "Мария Сидорова", email: "maria@example.com" }
-]
+db.exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT)")
 
 app.register(fastifyFormbody)
-
 app.register(fastifyStatic, {
   root: path.join(__dirname, 'public'),
   prefix: '/public/'
 })
-
 app.register(fastifyView, {
-  engine: {
-    pug: pug
-  },
+  engine: { pug },
   root: path.join(__dirname, 'views')
 })
 
@@ -36,6 +30,7 @@ app.get('/', async (req, res) => {
 })
 
 app.get('/users', async (req, res) => {
+  const users = db.prepare("SELECT * FROM users").all()
   return res.view('users.pug', { users })
 })
 
@@ -45,12 +40,13 @@ app.get('/users/create', async (req, res) => {
 
 app.post('/users', async (req, res) => {
   const { name, email } = req.body
-  const newUser = {
-    id: users.length + 1,
-    name,
-    email
-  }
-  users.push(newUser)
+  db.prepare("INSERT INTO users (name, email) VALUES (?, ?)").run(name, email)
+  return res.redirect('/users')
+})
+
+app.post('/users/delete/:id', async (req, res) => {
+  const { id } = req.params
+  db.prepare("DELETE FROM users WHERE id = ?").run(id)
   return res.redirect('/users')
 })
 

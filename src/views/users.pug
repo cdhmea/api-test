@@ -2,10 +2,15 @@ doctype html
 html
   head
     title Список пользователей
-    link(rel="stylesheet", href="/public/style.css")
   body
-    h1 Список пользователей
+    h1 Все пользователи
     a(href="/users/create") Добавить нового
     ul
       each user in users
-        li #{user.name} (#{user.email}) - ID: #{user.id}
+        li 
+          b #{user.name} 
+          | (#{user.email}) 
+          form(method="POST" action=`/users/delete/${user.id}` style="display:inline; margin-left:10px;")
+            button(type="submit") Удалить
+    hr
+    a(href="/") На главную
